@@ -1,0 +1,21 @@
+server:
+  port: 8001
+  servlet:
+    context-path: /spring-cloud-sqs-dlq-pattern-implementation
+
+cloud:
+  aws:
+    region:
+      static: sa-east-1
+    access-key: ${AWS_ACCESS_KEY}
+    secret-key: ${AWS_SECRET_KEY}
+    dynamodb:
+      endpoint: http://dynamodb.sa-east-1.amazonaws.com
+    sqs:
+      source-sqs-with-attached-dlq:
+        url: ${SOURCE_SQS_WITH_ATTACHED_DLQ}
+      source-sqs-without-attached-dlq:
+        url: ${SOURCE_SQS_WITHOUT_ATTACHED_DLQ}
+        reprocess-max-count: 3
+      dlq-for-source-sqs-without-attached-dlq:
+        url: ${DLQ_FOR_SOURCE_SQS_WITHOUT_ATTACHED_DLQ}
