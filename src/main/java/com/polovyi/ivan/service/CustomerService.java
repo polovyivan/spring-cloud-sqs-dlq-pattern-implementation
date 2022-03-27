@@ -25,8 +25,10 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final AmazonSQS amazonSQSClient;
+
     @Value("${cloud.aws.sqs.source-sqs-with-attached-dlq.url}")
     private String  emailSQSUrl;
+
     @Value("${cloud.aws.sqs.source-sqs-without-attached-dlq.url}")
     private String phoneSQSUrl;
 
@@ -44,7 +46,13 @@ public class CustomerService {
         CustomerEntity customer = CustomerEntity.valueOf(customerRequest);
 
         customerRepository.save(customer);
+        putMessagesToSQS(customerRequest);
+    }
+
+    private void putMessagesToSQS(CustomerRequest customerRequest) {
+
         String objectAsString = JsonObjectMapper.toString(customerRequest);
+
         if (customerRequest.getPhoneNumber() != null) {
             log.info("Sending message to queue {} ...", phoneSQSUrl);
             amazonSQSClient.sendMessage(phoneSQSUrl, objectAsString);
@@ -52,7 +60,6 @@ public class CustomerService {
 
         log.info("Sending message to queue {} ...", emailSQSUrl);
         amazonSQSClient.sendMessage(emailSQSUrl, objectAsString);
-
     }
 }
 

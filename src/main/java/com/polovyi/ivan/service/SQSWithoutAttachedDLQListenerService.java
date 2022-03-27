@@ -3,6 +3,7 @@ package com.polovyi.ivan.service;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.polovyi.ivan.dto.SmsNotificationDTO;
 import com.polovyi.ivan.entity.converter.JsonObjectMapper;
+import com.polovyi.ivan.service.client.SmsAPIClient;
 import io.awspring.cloud.messaging.listener.SqsMessageDeletionPolicy;
 import io.awspring.cloud.messaging.listener.annotation.SqsListener;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +19,10 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SQSWithoutAttachedDLQListenerService extends SQSListenerService {
+public class SQSWithoutAttachedDLQListenerService {
 
     private final AmazonSQS amazonSQSClient;
+    private final SmsAPIClient smsAPIClient;
 
     @Value("${cloud.aws.sqs.dlq-for-source-sqs-without-attached-dlq.url}")
     private String phoneDLQUrl;
@@ -32,10 +34,13 @@ public class SQSWithoutAttachedDLQListenerService extends SQSListenerService {
     public void processConsentPaymentLogMessages(@Headers Map<String, String> headers,
             @Header("ApproximateReceiveCount") String approximateReceiveCount, @Payload String message) {
 
+        log.info("Just to show that to obtain ApproximateReceiveCount {} the headers can be used too.",
+                headers.get("ApproximateReceiveCount"));
+
         try {
             SmsNotificationDTO smsNotificationDTO = JsonObjectMapper.toObject(message, SmsNotificationDTO.class);
 
-            sendNotificationToCustomer(smsNotificationDTO);
+            smsAPIClient.sendNotificationToCustomer(smsNotificationDTO);
         } catch (RuntimeException ex) {
             handleException(approximateReceiveCount, message, ex);
         }

@@ -16,6 +16,6 @@ cloud:
         url: ${SOURCE_SQS_WITH_ATTACHED_DLQ}
       source-sqs-without-attached-dlq:
         url: ${SOURCE_SQS_WITHOUT_ATTACHED_DLQ}
-        reprocess-max-count: 3
+        reprocess-max-count: 2
       dlq-for-source-sqs-without-attached-dlq:
         url: ${DLQ_FOR_SOURCE_SQS_WITHOUT_ATTACHED_DLQ}
