@@ -19,7 +19,7 @@ public class CustomerRequest {
 
     private String phoneNumber;
 
+    @NotEmpty
     private String fullName;
 
-    private LocalDate createdAt;
 }
