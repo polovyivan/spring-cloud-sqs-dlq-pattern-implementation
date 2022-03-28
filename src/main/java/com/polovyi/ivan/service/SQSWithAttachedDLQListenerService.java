@@ -3,7 +3,6 @@ package com.polovyi.ivan.service;
 import com.polovyi.ivan.dto.EmailNotificationDTO;
 import com.polovyi.ivan.entity.converter.JsonObjectMapper;
 import com.polovyi.ivan.service.client.EmailAPIClient;
-import com.polovyi.ivan.service.client.SmsAPIClient;
 import io.awspring.cloud.messaging.listener.annotation.SqsListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
