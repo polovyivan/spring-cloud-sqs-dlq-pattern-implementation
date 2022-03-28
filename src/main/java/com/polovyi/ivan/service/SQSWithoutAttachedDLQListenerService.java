@@ -41,10 +41,10 @@ public class SQSWithoutAttachedDLQListenerService {
             SmsNotificationDTO smsNotificationDTO = JsonObjectMapper.toObject(message, SmsNotificationDTO.class);
 
             smsAPIClient.sendNotificationToCustomer(smsNotificationDTO);
+            log.info("Message processed successfully");
         } catch (RuntimeException ex) {
             handleException(approximateReceiveCount, message, ex);
         }
-        log.info("Message processed successfully");
     }
 
     private void handleException(String approximateReceiveCount, String message, RuntimeException ex) {
